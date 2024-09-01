@@ -22,7 +22,7 @@
     }
 
     .fire * {
-      animation: fireAnimation 2s infinite;
+      animation: fireAnimation 10s infinite;
     }
   </style>
 

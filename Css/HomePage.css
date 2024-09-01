@@ -6,7 +6,7 @@
 }
 
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Poppins', sans-serif;
     background-color: #F5F5F5;
 }
 
@@ -20,7 +20,7 @@ body {
 }
 
 .navbar-nav {
-    margin-left: auto;
+    margin-right: auto;
 }
 
 .hero {
@@ -41,9 +41,16 @@ body {
     animation: fireAnimation 2s infinite;
 }
 
+.hero .banner-logo {
+    filter: none !important;
+    max-width: 100%;
+    height: auto;
+}
+
 .category-card {
     transition: transform 0.3s;
     cursor: pointer;
+    height: 100%;
 }
 
 .category-card:hover {
@@ -97,9 +104,96 @@ body {
         color: #b80000;
     }
     50% {
-        color: #ff0000;
+        color: #ff9800;
     }
     100% {
         color: #b80000;
+    }
+}
+
+/* Responsividade */
+@media (max-width: 991.98px) {
+    .navbar-nav {
+        margin: 0;
+    }
+
+    .navbar-collapse {
+        margin-top: 10px;
+    }
+    
+    .navbar-nav .nav-item {
+        margin-left: 0;
+    }
+
+    .navbar-toggler {
+        margin-right: 0;
+    }
+
+    .d-flex {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #cart-button, .btn-light {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .hero {
+        padding: 50px 0;
+        height: auto;
+    }
+
+    .hero .banner-logo {
+        max-width: 80%;
+    }
+
+    .category-card {
+        margin-bottom: 20px;
+    }
+    
+    .features i {
+        font-size: 2rem;
+    }
+    
+    .features h3 {
+        font-size: 1.5rem;
+    }
+
+    .features p {
+        font-size: 1rem;
+    }
+
+    #cart-sidebar {
+        width: 100%;
+        right: -100%;
+    }
+
+    #cart-sidebar.show {
+        right: 0;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .hero {
+        padding: 30px 0;
+    }
+
+    .hero .banner-logo {
+        max-width: 90%;
+    }
+
+    .features i {
+        font-size: 1.5rem;
+    }
+
+    .features h3 {
+        font-size: 1.2rem;
+    }
+
+    .features p {
+        font-size: 0.9rem;
     }
 }
