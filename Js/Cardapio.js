@@ -140,5 +140,5 @@ closeCart.addEventListener('click', () => {
     cartSidebar.classList.remove('show');
 });
 
-// Initial render
+
 renderMenuItems(menuItems);
