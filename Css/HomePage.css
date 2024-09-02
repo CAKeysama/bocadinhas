@@ -3,6 +3,8 @@
     --secondary-color: #5f8670;
     --accent-color: #ff9800;
     --hover-color: #ff5722;
+    --back-ground-color: #dbdbdb;
+    --black: #090505;
 }
 
 body {
@@ -97,6 +99,13 @@ body {
 #cart-total {
     font-weight: bold;
     font-size: 1.2em;
+}
+
+.contact-form {
+    background-color: var(--back-ground-color);
+    color: var(--black);
+    border-radius: 10px;
+    padding: 10px;
 }
 
 @keyframes fireAnimation {
