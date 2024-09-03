@@ -5,6 +5,7 @@
     --hover-color: #ff5722;
     --back-ground-color: #dbdbdb;
     --black: #090505;
+    --info-color: #5b8052;
 }
 
 body {
@@ -108,6 +109,16 @@ body {
     padding: 10px;
 }
 
+.btn-info {
+    background-color: var(--info-color);
+    border-color: var(--secondary-color);
+}
+
+.btn-info:hover {
+    background-color: #4a6b59;
+    border-color: #4a6b59;
+}
+
 @keyframes fireAnimation {
     0% {
         color: #b80000;
@@ -118,6 +129,13 @@ body {
     100% {
         color: #b80000;
     }
+}
+
+/* Novo estilo para as imagens dos itens */
+.item-image {
+    max-width: 100px;
+    max-height: 100px;
+    object-fit: cover;
 }
 
 /* Responsividade */
@@ -204,5 +222,16 @@ body {
 
     .features p {
         font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .d-flex.justify-content-between {
+        flex-direction: column;
+        align-items: stretch !important;
+    }
+
+    .d-flex.justify-content-between .btn {
+        margin-bottom: 10px;
     }
 }

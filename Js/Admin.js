@@ -26,7 +26,7 @@ function renderItems() {
             <td>R$ ${item.price.toFixed(2)}</td>
             <td class="d-none d-md-table-cell">${item.description}</td>
             <td class="d-none d-md-table-cell">${item.weight}g</td>
-            <td><img src="${item.photo}" alt="${item.name}" class="img-thumbnail"></td>
+            <td><img src="${item.photo}" alt="${item.name}" class="img-thumbnail item-image"></td>
             <td class="action-buttons">
                 <button class="btn btn-sm btn-primary edit-btn" data-id="${item.id}"><i class="fas fa-edit"></i></button>
                 <button class="btn btn-sm btn-danger delete-btn" data-id="${item.id}"><i class="fas fa-trash"></i></button>

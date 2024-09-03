@@ -6,17 +6,15 @@
     <title>Bocadinhas - Administração</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="icon" href="../Img/Icon.svg" type="image/svg">
-    <link rel="stylesheet" href="../Css/admin.css">
+    <link rel="stylesheet" href="../Css/HomePage.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="./HomePage.html">
-                <img src="../Img/Icon_white.svg" alt="Bocadinhas" height="30" class="d-inline-block align-top">
-            </a>
             <a class="navbar-brand" href="#">
+                <img src="../Img/Icon_white.svg" alt="Bocadinhas" height="30" class="d-inline-block align-top">
                 Administração
             </a>
         </div>
@@ -24,9 +22,14 @@
 
     <div class="container mt-4">
         <h1 class="mb-4">Gerenciar Itens</h1>
-        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addItemModal">
-            <i class="fas fa-plus"></i> Adicionar Item
-        </button>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addItemModal">
+                <i class="fas fa-plus"></i> Adicionar Item
+            </button>
+            <button class="btn btn-info text-white" data-bs-toggle="modal" data-bs-target="#infoModal">
+                <i class="fas fa-chart-bar"></i> Informações
+            </button>
+        </div>
         <div class="table-responsive">
             <table class="table table-striped">
                 <thead>
@@ -127,7 +130,43 @@
         </div>
     </div>
 
+    <!-- Store Info Modal -->
+    <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="infoModalLabel">Informações da Loja</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <h6>Vendas Recentes</h6>
+                            <canvas id="recentSalesChart"></canvas>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <h6>Itens Mais Vendidos</h6>
+                            <canvas id="topItemsChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <h6>Média de Preço por Categoria</h6>
+                            <canvas id="avgPriceCategoryChart"></canvas>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <h6>Distribuição de Preços</h6>
+                            <canvas id="priceDistributionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../Js/Admin.js"></script>
+    <script src="../Js/Charts.js"></script>
 </body>
 </html>
