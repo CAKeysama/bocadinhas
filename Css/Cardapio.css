@@ -68,3 +68,58 @@ body {
     height: 200px;
     object-fit: cover;
 }
+
+/* Add these rules to your existing Cardapio.css file */
+
+.navbar-nav {
+    margin-right: auto;
+}
+
+.navbar-nav .nav-item {
+    margin-left: 1px;
+}
+
+.navbar-toggler {
+    border: none;
+}
+
+.d-flex {
+    align-items: center;
+}
+
+#cart-button, .btn-light {
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#cart-button:hover, .btn-light:hover {
+    background-color: var(--hover-color);
+    color: white;
+}
+
+@media (max-width: 991.98px) {
+    .navbar-nav {
+        margin: 0;
+    }
+
+    .navbar-collapse {
+        margin-top: 10px;
+    }
+    
+    .navbar-nav .nav-item {
+        margin-left: 0;
+    }
+
+    .navbar-toggler {
+        margin-right: 0;
+    }
+
+    .d-flex {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #cart-button, .btn-light {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
