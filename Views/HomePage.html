@@ -37,10 +37,15 @@
                             <a class="nav-link" href="./Admin.html">Administração</a>
                         </li>
                     </ul>
-                    <div class="d-flex">
-                        <button id="cart-button" class="btn btn-outline-light me-2"><i class="fas fa-shopping-cart"></i> Carrinho
-                            <span id="cart-count" class="badge bg-light text-dark">0</span></button>
-                        <a href="./Login_Registro.html" class="btn btn-light">Entrar</a>
+                    <div class="d-flex align-items-center">
+                        <button id="cart-button" class="btn btn-outline-light me-2">
+                            <i class="fas fa-shopping-cart"></i> Carrinho
+                            <span id="cart-count" class="badge bg-light text-dark">0</span>
+                        </button>
+                        <a href="./Login_Registro.html" id="login-button" class="btn btn-light">Entrar</a>
+                        <div id="profile-icon" class="ms-2" style="display: none;">
+                            <img src="../Img/Profile_avatar.png" alt="Perfil" class="rounded-circle" width="40" height="40" data-bs-toggle="modal" data-bs-target="#logoutModal" style="cursor: pointer;">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -159,6 +164,25 @@
                 <div class="mt-3">
                     <p id="cart-total">Total: R$ 0,00</p>
                     <button class="btn btn-primary w-100" id="checkout-button">Finalizar Compra</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Logout -->
+        <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="logoutModalLabel">Deseja sair?</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Tem certeza de que deseja encerrar sua sessão?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="logout-button">Sair</button>
+                    </div>
                 </div>
             </div>
         </div>
