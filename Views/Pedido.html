@@ -8,11 +8,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="icon" href="../Img/Icon.svg" type="image/svg">
-    <link rel="stylesheet" href="/Css/Pedido.css">
+    <link rel="stylesheet" href="../Css/Pedido.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        
-    </style>
 </head>
 
 <body>
@@ -49,22 +46,34 @@
                     <div class="progress-steps">
                         <div class="progress-line"></div>
                         <div class="progress-step">
-                            <div class="step-icon completed">
-                                <i class="fas fa-shopping-cart"></i>
-                            </div>
-                            <small>Carrinho</small>
-                        </div>
-                        <div class="progress-step">
                             <div class="step-icon active">
                                 <i class="fas fa-credit-card"></i>
                             </div>
-                            <small>Pagamento</small>
+                            <div class="step-label">Confirmar Pagamento</div>
                         </div>
                         <div class="progress-step">
                             <div class="step-icon">
-                                <i class="fas fa-check"></i>
+                                <i class="fas fa-check-circle"></i>
                             </div>
-                            <small>Confirmação</small>
+                            <div class="step-label">Pedido Recebido</div>
+                        </div>
+                        <div class="progress-step">
+                            <div class="step-icon">
+                                <i class="fas fa-utensils"></i>
+                            </div>
+                            <div class="step-label">Cozinhando</div>
+                        </div>
+                        <div class="progress-step">
+                            <div class="step-icon">
+                                <i class="fas fa-motorcycle"></i>
+                            </div>
+                            <div class="step-label">Saiu para Entrega</div>
+                        </div>
+                        <div class="progress-step">
+                            <div class="step-icon">
+                                <i class="fas fa-home"></i>
+                            </div>
+                            <div class="step-label">Entrega Finalizada</div>
                         </div>
                     </div>
 
@@ -100,7 +109,7 @@
                 <!-- Métodos de Pagamento -->
                 <div class="order-card">
                     <h5 class="mb-3">Escolha o Método de Pagamento</h5>
-                    <div class="payment-method selected">
+                    <div class="payment-method" data-method="pix">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="paymentMethod" id="pix" checked>
                             <label class="form-check-label" for="pix">
@@ -108,7 +117,7 @@
                             </label>
                         </div>
                     </div>
-                    <div class="payment-method">
+                    <div class="payment-method" data-method="credit">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="paymentMethod" id="credit">
                             <label class="form-check-label" for="credit">
@@ -116,12 +125,38 @@
                             </label>
                         </div>
                     </div>
-                    <div class="payment-method">
+                    <div class="payment-method" data-method="debt">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="paymentMethod" id="debt">
+                            <label class="form-check-label" for="debt">
+                                <i class="fas fa-credit-card me-2"></i> Cartão de Débito
+                            </label>
+                        </div>
+                    </div>
+                    <div class="payment-method" data-method="money">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="paymentMethod" id="money">
                             <label class="form-check-label" for="money">
                                 <i class="fas fa-money-bill-wave me-2"></i> Dinheiro na Entrega
                             </label>
+                        </div>
+                    </div>
+                    
+
+                    <!-- Seção de Troco -->
+                    <div class="change-section" id="changeSection">
+                        <h6 class="mb-3">Vai precisar de troco?</h6>
+                        <p class="text-muted mb-3">Digite o valor que você vai pagar em dinheiro pra que a pessoa que
+                            for entregar seu pedido leve o troco pra você.</p>
+                        <div class="mb-3">
+                            <label for="changeAmount" class="form-label">Valor em dinheiro</label>
+                            <input type="number" class="form-control" id="changeAmount" placeholder="R$ 0,00">
+                        </div>
+                        <p class="text-muted mb-3">Lembre-se quando receber seu pedido é importante que você confira o
+                            valor do seu troco.</p>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-primary" id="confirmChange">Confirmar</button>
+                            <button class="btn btn-outline-secondary" id="noChange">Não preciso de troco</button>
                         </div>
                     </div>
                 </div>
@@ -133,7 +168,7 @@
                     <h5 class="mb-3">Resumo do Pedido</h5>
                     <div class="d-flex justify-content-between mb-2">
                         <span>Subtotal:</span>
-                        <span id="subtotal">R$ 0,00</span>
+                        <span id="subtotal">R$ 65,00</span>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
                         <span>Taxa de entrega:</span>
@@ -142,9 +177,9 @@
                     <hr>
                     <div class="d-flex justify-content-between mb-3">
                         <strong>Total:</strong>
-                        <strong id="total">R$ 0,00</strong>
+                        <strong id="total">R$ 70,00</strong>
                     </div>
-                    <button class="btn btn-primary w-100" id="finish-order">Finalizar Pedido</button>
+                    <button class="btn btn-primary w-100 finish-order" id="finish-order">Finalizar Pedido</button>
                 </div>
 
                 <div class="order-card">
@@ -188,7 +223,10 @@
             </div>
         </div>
     </footer>
-    <script src="../Js/Pagamento.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+
+<script src="../Js/Pagamento.js"></script>
+
+<!-- SweetAlert2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

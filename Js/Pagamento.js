@@ -1,22 +1,71 @@
-// pagamento.js
-// Função para recuperar dados do carrinho do localStorage
+// Constantes e elementos DOM
+const DELIVERY_FEE = 5.00;
+let orderNumber;
+
+// Event listeners para métodos de pagamento
+document.querySelectorAll('.payment-method').forEach(method => {
+    method.addEventListener('click', () => {
+        // Limpa seleção anterior
+        document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
+        // Adiciona seleção ao método atual
+        method.classList.add('selected');
+        // Marca o radio button
+        const radio = method.querySelector('input[type="radio"]');
+        radio.checked = true;
+        // Dispara o evento change manualmente
+        radio.dispatchEvent(new Event('change'));
+    });
+});
+
+// Elementos DOM - Payment
+const paymentMethods = document.querySelectorAll('.payment-method input[type="radio"]');
+const changeSection = document.getElementById('changeSection');
+const confirmChangeBtn = document.getElementById('confirmChange');
+const noChangeBtn = document.getElementById('noChange');
+const changeAmount = document.getElementById('changeAmount');
+const finishOrderBtn = document.querySelector('.btn-primary.w-100');
+
+// Funções auxiliares
 function getCartFromStorage() {
     const cartData = localStorage.getItem('bocadinhasCart');
     return cartData ? JSON.parse(cartData) : [];
 }
 
-// Função para calcular o total do pedido
 function calculateOrderTotal(cart) {
     const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const deliveryFee = 5.00; // Taxa de entrega fixa
     return {
         subtotal: subtotal,
-        deliveryFee: deliveryFee,
-        total: subtotal + deliveryFee
+        deliveryFee: DELIVERY_FEE,
+        total: subtotal + DELIVERY_FEE
     };
 }
 
-// Função para renderizar os itens do pedido
+function generateOrderNumber() {
+    return '#' + Date.now().toString().slice(-6);
+}
+
+// Função showCustomAlert atualizada com SweetAlert2
+function showCustomAlert(message) {
+    Swal.fire({
+        text: message,
+        toast: true,
+        position: 'bottom-end',
+        timer: 3000,
+        timerProgressBar: true,
+        showConfirmButton: false,
+        background: '#28a745',
+        color: 'white',
+        customClass: {
+            popup: 'colored-toast'
+        },
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer);
+            toast.addEventListener('mouseleave', Swal.resumeTimer);
+        }
+    });
+}
+
+// Funções de renderização
 function renderOrderItems(cart) {
     const orderTableBody = document.querySelector('.table tbody');
     orderTableBody.innerHTML = '';
@@ -33,26 +82,23 @@ function renderOrderItems(cart) {
     });
 }
 
-// Função para atualizar o resumo do pedido
 function updateOrderSummary(orderTotals) {
     document.getElementById('subtotal').textContent = `R$ ${orderTotals.subtotal.toFixed(2)}`;
     document.getElementById('delivery-fee').textContent = `R$ ${orderTotals.deliveryFee.toFixed(2)}`;
     document.getElementById('total').textContent = `R$ ${orderTotals.total.toFixed(2)}`;
 }
 
-var orderNumber;
-
-window.onload = ()  =>  {
-  orderNumber = generateOrderNumber();
+// Funções de gerenciamento de pedido
+function saveOrderToHistory(orderData) {
+    const orderHistory = JSON.parse(localStorage.getItem('bocadinhasOrderHistory') || '[]');
+    orderHistory.push(orderData);
+    localStorage.setItem('bocadinhasOrderHistory', JSON.stringify(orderHistory));
 }
 
-
-// Função para finalizar o pedido
 function finalizePedido() {
     const selectedPayment = document.querySelector('input[name="paymentMethod"]:checked').id;
     const cart = getCartFromStorage();
     const orderTotals = calculateOrderTotal(cart);
-    
     
     const orderData = {
         items: cart,
@@ -63,103 +109,91 @@ function finalizePedido() {
         timestamp: new Date().toISOString()
     };
 
-    // Salvar pedido no histórico
     saveOrderToHistory(orderData);
-    
-    // Limpar carrinho
     localStorage.removeItem('bocadinhasCart');
-    
-    // Mostrar alerta personalizado
-    showCustomAlert(`Pedido   ${orderData.orderNumber} confirmado com sucesso!`);
-
-    // Atualizar conteúdo da página com o número do pedido
+    showCustomAlert(`Pedido ${orderData.orderNumber} confirmado com sucesso!`);
     document.getElementById('order-number').textContent = orderData.orderNumber;
 }
 
-// Função para mostrar alerta personalizado
-function showCustomAlert(message) {
-    const alertBox = document.createElement('div');
-    alertBox.className = 'custom-alert';
-    alertBox.textContent = message;
-    
-    document.body.appendChild(alertBox);
-    
-    setTimeout(() => {
-        alertBox.classList.add('visible');
-    }, 100);
-    
-    setTimeout(() => {
-        alertBox.classList.remove('visible');
-        setTimeout(() => {
-            document.body.removeChild(alertBox);
-        }, 500);
-    }, 3000);
-}
-
-// Adicione estilos para o alerta personalizado
-const style = document.createElement('style');
-style.textContent = `
-    .custom-alert {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background-color: #28a745;
-        color: white;
-        padding: 15px;
-        border-radius: 5px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        opacity: 0;
-        transition: opacity 0.5s, bottom 0.5s;
+// Handlers de eventos
+function handlePaymentMethodChange(e) {
+    console.log('Método de pagamento alterado:', e.target.id); // Debug
+    if (e.target.id === 'money') {
+        changeSection.style.display = 'block';
+        changeAmount.value = '';
+    } else {
+        changeSection.style.display = 'none';
     }
-    .custom-alert.visible {
-        opacity: 1;
-        bottom: 30px;
+}
+
+function handleConfirmChange() {
+    const amount = parseFloat(changeAmount.value);
+    const total = parseFloat(document.getElementById('total').textContent.replace('R$ ', '').replace(',', '.'));
+    
+    if (!amount || amount <= 0) {
+        showCustomAlert('Por favor, insira um valor válido.');
+        return;
     }
-`;
-document.head.appendChild(style);
+    
+    if (amount < total) {
+        showCustomAlert('O valor informado é menor que o total do pedido.');
+        return;
+    }
+    
+    const change = amount - total;
+    Swal.fire({
+        text: `Seu troco será de R$ ${change.toFixed(2).replace('.', ',')}`,
+        toast: true,
+        position: 'bottom-end',
+        timer: 3000,
+        timerProgressBar: true,
+        showConfirmButton: false,
+        background: '#28a745',
+        color: 'white'
+    });
 
-// Função para gerar número do pedido
-function generateOrderNumber() {
-    return '#' + Date.now().toString().slice(-6);
+    changeSection.style.display = 'none';
 }
 
-// Função para salvar pedido no histórico
-function saveOrderToHistory(orderData) {
-    const orderHistory = JSON.parse(localStorage.getItem('bocadinhasOrderHistory') || '[]');
-    orderHistory.push(orderData);
-    localStorage.setItem('bocadinhasOrderHistory', JSON.stringify(orderHistory));
+function handleNoChange() {
+    changeAmount.value = '';
+    changeSection.style.display = 'none';
 }
 
-// Inicialização da página
-document.addEventListener('DOMContentLoaded', () => {
+// Inicialização
+function initializePaymentPage() {
     const cart = getCartFromStorage();
     
-    // Se o carrinho estiver vazio, redireciona para o cardápio
     if (!cart || cart.length === 0) {
         window.location.href = '/cardapio.html';
         return;
     }
 
-    // Renderiza os itens do pedido
     renderOrderItems(cart);
-
-    // Calcula e atualiza os totais
     const orderTotals = calculateOrderTotal(cart);
     updateOrderSummary(orderTotals);
+    
+    // Configuração inicial
+    changeSection.style.display = 'none';
+    orderNumber = generateOrderNumber();
 
-    // Event listener para o botão de finalizar pedido
-    document.querySelector('.btn-primary.w-100').addEventListener('click', finalizePedido);
-
-    // Event listeners para os métodos de pagamento
+    // Event listeners
     document.querySelectorAll('.payment-method').forEach(method => {
         method.addEventListener('click', () => {
-            // Remove a classe selected de todos
-            document.querySelectorAll('.payment-method').forEach(m => 
-                m.classList.remove('selected'));
-            // Adiciona a classe selected ao método clicado
+            document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
             method.classList.add('selected');
-            // Marca o radio button
             method.querySelector('input[type="radio"]').checked = true;
         });
     });
-});
+
+    paymentMethods.forEach(method => {
+        method.addEventListener('change', handlePaymentMethodChange);
+    });
+
+    confirmChangeBtn.addEventListener('click', handleConfirmChange);
+    noChangeBtn.addEventListener('click', handleNoChange);
+    finishOrderBtn.addEventListener('click', finalizePedido);
+}
+
+// Inicialização quando o DOM estiver pronto
+document.addEventListener('DOMContentLoaded', initializePaymentPage);
