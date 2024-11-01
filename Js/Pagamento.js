@@ -40,18 +40,26 @@ function updateOrderSummary(orderTotals) {
     document.getElementById('total').textContent = `R$ ${orderTotals.total.toFixed(2)}`;
 }
 
+var orderNumber;
+
+window.onload = ()  =>  {
+  orderNumber = generateOrderNumber();
+}
+
+
 // Função para finalizar o pedido
 function finalizePedido() {
     const selectedPayment = document.querySelector('input[name="paymentMethod"]:checked').id;
     const cart = getCartFromStorage();
     const orderTotals = calculateOrderTotal(cart);
     
+    
     const orderData = {
         items: cart,
         payment: selectedPayment,
         totals: orderTotals,
         status: 'pending',
-        orderNumber: generateOrderNumber(),
+        orderNumber: orderNumber,
         timestamp: new Date().toISOString()
     };
 

@@ -41,3 +41,4 @@ document.getElementById('logout-button').addEventListener('click', function() {
 
 // Inicializa a UI baseada no estado inicial
 updateLoginUI();
+
