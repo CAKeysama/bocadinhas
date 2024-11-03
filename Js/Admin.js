@@ -1,11 +1,28 @@
+// Variáveis globais
 let items = [];
+let transactions = [];
+let cashRegister = {
+    isOpen: false,
+    startAmount: 0,
+    currentTotal: 0
+};
 
+
+// Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
+    // Inicialização do gerenciamento de itens
     loadItems();
     document.getElementById('saveItemBtn').addEventListener('click', saveItem);
     document.getElementById('updateItemBtn').addEventListener('click', updateItem);
+
+    // Inicialização do caixa
+    document.getElementById('openCashRegisterBtn').addEventListener('click', openCashRegister);
+    document.getElementById('closeCashRegisterBtn').addEventListener('click', closeCashRegister);
+    document.getElementById('recordSaleBtn').addEventListener('click', recordSale);
+    updateCashRegisterDisplay();
 });
 
+// Funções de gerenciamento de itens
 function loadItems() {
     // aqui você pode fazer uma requisição para o backend para buscar os itens
     // e então chamar a função renderItems() com os itens retornados
@@ -118,8 +135,116 @@ function updateItem() {
 }
 
 function deleteItem(id) {
-    if (confirm('Tem certeza que deseja excluir este item?')) {
-        items = items.filter(item => item.id !== id);
-        renderItems();
+    Swal.fire({
+        title: 'Tem certeza?',
+        text: "Você não poderá reverter esta ação!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sim, excluir!',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            items = items.filter(item => item.id !== id);
+            renderItems();
+            Swal.fire(
+                'Excluído!',
+                'O item foi excluído com sucesso.',
+                'success'
+            );
+        }
+    });
+}
+
+
+// Funções de gerenciamento do caixa
+function openCashRegister() {
+    if (!cashRegister.isOpen) {
+        cashRegister.isOpen = true;
+        cashRegister.startAmount = 100; // Exemplo de valor inicial
+        cashRegister.currentTotal = cashRegister.startAmount;
+        updateCashRegisterDisplay();
+        Swal.fire({
+            icon: 'success',
+            title: 'Caixa Aberto',
+            showConfirmButton: false,
+            timer: 1500
+        });
     }
+}
+
+function closeCashRegister() {
+    if (cashRegister.isOpen) {
+        cashRegister.isOpen = false;
+        cashRegister.currentTotal = 0;
+        updateCashRegisterDisplay();
+        Swal.fire({
+            icon: 'success',
+            title: 'Caixa Fechado',
+            showConfirmButton: false,
+            timer: 1500
+        });
+    }
+}
+
+
+function recordSale() {
+    if (!cashRegister.isOpen) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Erro',
+            text: 'Abra o caixa antes de registrar uma venda.'
+        });
+        return;
+    }
+
+    const saleAmount = parseFloat(prompt('Digite o valor da venda:'));
+    const paymentMethod = prompt('Digite o método de pagamento (Pix, Crédito, Débito, Dinheiro):');
+
+    if (!isNaN(saleAmount) && saleAmount > 0 && ['Pix', 'Crédito', 'Débito', 'Dinheiro'].includes(paymentMethod)) {
+        transactions.push({
+            amount: saleAmount,
+            method: paymentMethod,
+            date: new Date()
+        });
+        cashRegister.currentTotal += saleAmount;
+        alert('Venda registrada com sucesso!');
+        updateCashRegisterDisplay();
+        renderTransactions();
+    } else {
+        alert('Informações inválidas! Tente novamente.');
+    }
+}
+
+function updateCashRegisterDisplay() {
+    const cashStatus = document.getElementById('cashStatus');
+    const cashTotal = document.getElementById('cashTotal');
+    
+    if (cashRegister.isOpen) {
+        cashStatus.textContent = "Aberto";
+        cashStatus.classList.remove("text-danger");
+        cashStatus.classList.add("text-success");
+        cashTotal.textContent = `R$ ${cashRegister.currentTotal.toFixed(2)}`;
+    } else {
+        cashStatus.textContent = "Fechado";
+        cashStatus.classList.remove("text-success");
+        cashStatus.classList.add("text-danger");
+        cashTotal.textContent = "R$ 0,00";
+    }
+}
+
+
+function renderTransactions() {
+    const tbody = document.getElementById('transactionsTableBody');
+    tbody.innerHTML = '';
+    transactions.forEach(transaction => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>R$ ${transaction.amount.toFixed(2)}</td>
+            <td>${transaction.method}</td>
+            <td>${transaction.date.toLocaleString()}</td>
+        `;
+        tbody.appendChild(tr);
+    });
 }
